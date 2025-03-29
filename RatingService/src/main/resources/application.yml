@@ -12,14 +12,22 @@ spring:
   application:
     name: Rating-Service
 
-eureka:
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://localhost:8085/eureka/
-  instance:
-    prefer-ip-address: true
+
+
+  #Importing the data from the spring config
+  config:
+    import: "optional:configserver:http://localhost:8087"
+
+
+
+#eureka:
+#  client:
+#    register-with-eureka: true
+#    fetch-registry: true
+#    service-url:
+#      defaultZone: http://localhost:8085/eureka/
+#  instance:
+#    prefer-ip-address: true
 
 
 

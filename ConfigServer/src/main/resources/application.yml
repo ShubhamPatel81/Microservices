@@ -1,0 +1,29 @@
+server:
+  port: 8087
+
+
+#this is the configuration of the server through the GitHub as global config server
+spring:
+  application:
+    name: Config-Server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/ShubhamPatel81/microservice-configuration-file
+          clone-on-start: true
+
+
+
+
+# This is register this service to the service Registry as a client
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8085/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true
+
+

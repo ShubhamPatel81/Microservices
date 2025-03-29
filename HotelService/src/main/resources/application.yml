@@ -17,12 +17,16 @@ spring:
 
   application:
     name: Hotel-Service
-eureka:
-  client:
-    fetch-registry: true
-    register-with-eureka: true
-    service-url:
-      defaultZone: http://localhost:8085/eureka/
 
-  instance:
-    prefer-ip-address: true
+
+  config:
+    import: "optional:configserver:http://localhost:8087"
+#eureka:
+#  client:
+#    fetch-registry: true
+#    register-with-eureka: true
+#    service-url:
+#      defaultZone: http://localhost:8085/eureka/
+#
+#  instance:
+#    prefer-ip-address: true

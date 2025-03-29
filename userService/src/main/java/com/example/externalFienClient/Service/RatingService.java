@@ -10,23 +10,15 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.Map;
 @Service
-@FeignClient("RATINGSERVICE")
+@FeignClient("RATING-SERVICE")
 public interface RatingService {
-
-
     // get
-
-
     //post rating
-
     @PostMapping("/ratings")
     public Rating  createRating( Rating values);
-
     // put rating
-
     @PutMapping("/ratings/{ratingId}")
     public Rating updateRating(@PathVariable("ratingId")String ratingId, Rating rating);
-
     //delete
     @DeleteMapping("/ratings/{ratingId}")
     public void deleteRating(@PathVariable String ratingId);

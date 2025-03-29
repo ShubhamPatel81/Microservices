@@ -17,14 +17,25 @@ spring:
   application:
     name: user-Service
 
+#This is the config server importing from the configserver
+  config:
+    import: "optional:configserver:http://localhost:8087"
+
+#  profiles:
+#    active: dev
+       #this will activate the production or development  file i.e - application.prod
 
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8085/eureka/
-    register-with-eureka: true
-    fetch-registry: true
 
-  instance:
-    prefer-ip-address: true
+
+#
+#
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:8085/eureka/
+#    register-with-eureka: true
+#    fetch-registry: true
+#
+#  instance:
+#    prefer-ip-address: true
