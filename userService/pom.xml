@@ -40,24 +40,18 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
-<!--open feingn dependency -->
+<!--		open feingn dependency -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 		</dependency>
 
-		<!--spring cloud and eureka servies -->
+
+		<!--		spring cloud and eureka servies -->
 
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-		</dependency>
-
-<!--		config server for configuration to the other service like github-->
-
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-config</artifactId>
 		</dependency>
 
 

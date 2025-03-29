@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
         // fetch eating of the above user from RATING SERVICE
         //http://localhost:8083/ratings/user/ce6690a2-276a-48e3-b06b-30ca9b512754
 
-      Rating[] ratingOfUser=  restTemplate.getForObject("http://RATING-SERVICE/ratings/user/"+user.getUserId(), Rating[].class);
+      Rating[] ratingOfUser=  restTemplate.getForObject("http://RATINGSERVICE/ratings/user/"+user.getUserId(), Rating[].class);
         logger.info("{}",ratingOfUser);
 
        List<Rating> ratings = Arrays.stream(ratingOfUser).toList();
@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
 
             //http://localhost:8082/hotels/b2e2166f-802e-4200-9129-cf7f041de7a
             //without using feign client
-//          ResponseEntity<Hotel> forHotel= restTemplate.getForEntity("http://HOTEL-SERVICE/hotels/"+rating.getHotelId(), Hotel.class);
+//          ResponseEntity<Hotel> forHotel= restTemplate.getForEntity("http://HOTELSERVICE/hotels/"+rating.getHotelId(), Hotel.class);
 //            Hotel hotel = forHotel.getBody();
 
             // using feign client
