@@ -207,6 +207,20 @@ spring:
         git:
           uri: https://github.com/ShubhamPatel81/microservice-configuration-file
           clone-on-start: true
+
+
+
+
+# This is register this service to the service Registry as a client
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8085/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true
+
 ```
 
 #### Enable Config Server
@@ -219,6 +233,248 @@ public class ConfigServerApplication {
     }
 }
 ```
+
+
+
+
+Perfect, Lester! Here’s the **Feign Client Integration** section rewritten to match the format and tone of the rest of your README content:
+
+---
+
+### 6. **Feign Client Integration**
+This project uses **Spring Cloud OpenFeign** to simplify inter-service communication in a microservices architecture. Feign allows services to communicate with each other declaratively using Java interfaces.
+
+#### Configuration
+
+```yaml
+spring:
+  application:
+    name: user-Service
+
+  config:
+    import: configServer: http://localhost:8087
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8085/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+  instance:
+    prefer-ip-address: true
+```
+
+#### Dependency
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-openfeign</artifactId>
+</dependency>
+```
+
+#### Enable Feign Clients
+
+```java
+@SpringBootApplication
+@EnableFeignClients
+public class UserServiceApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(UserServiceApplication.class, args);
+    }
+}
+```
+
+#### Example Feign Client
+
+```java
+@FeignClient(name = "HOTEL-SERVICE")
+public interface HotelServiceClient {
+
+    @GetMapping("/hotels/{hotelId}")
+    Hotel getHotelById(@PathVariable String hotelId);
+}
+```
+
+#### Usage
+
+```java
+@Autowired
+private HotelServiceClient hotelServiceClient;
+
+public Hotel fetchHotel(String hotelId) {
+    return hotelServiceClient.getHotelById(hotelId);
+}
+```
+
+
+
+
+
+
+
+Absolutely, Lester! Below is the **full documentation** written in the same format you've used in your README for other microservices. This includes **Feign Client**, **Resilience4j Retry**, and **Circuit Breaker configuration**, structured clearly for a GitHub `README.md` file.
+
+---
+
+## 🔗 **Feign Client Integration**
+
+This project uses **Spring Cloud OpenFeign** to simplify inter-service communication in a microservices architecture. It allows developers to write clean, declarative REST clients using only Java interfaces.
+
+### 📦 Dependencies
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-openfeign</artifactId>
+</dependency>
+```
+
+### ⚙️ Configuration
+
+```java
+@EnableFeignClients
+@SpringBootApplication
+public class UserServiceApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(UserServiceApplication.class, args);
+    }
+}
+```
+
+### 📞 Sample Feign Client Interface
+
+```java
+@FeignClient(name = "HOTEL-SERVICE")
+public interface HotelService {
+    
+    @GetMapping("/hotels/{hotelId}")
+    Hotel getHotel(@PathVariable("hotelId") String hotelId);
+}
+```
+
+---
+
+## 🔁 **Resilience4j Retry Integration**
+
+This implements **Resilience4j Retry** to handle transient faults by retrying failed external service calls. A fallback method is provided in case of persistent failure.
+
+### 📦 Dependencies
+
+```xml
+<!-- Actuator -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+
+<!-- AOP (Required for Resilience4j to work) -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-aop</artifactId>
+</dependency>
+
+<!-- Resilience4j -->
+<dependency>
+    <groupId>io.github.resilience4j</groupId>
+    <artifactId>resilience4j-spring-boot2</artifactId>
+</dependency>
+```
+
+### ⚙️ Controller Example
+
+```java
+int retryCount = 1;
+
+@GetMapping("/{userId}")
+// @CircuitBreaker(name = "ratingHotelBreaker", fallbackMethod = "ratingHotelFallBack")
+@Retry(name = "ratingHotelService", fallbackMethod = "ratingHotelFallBack")
+public ResponseEntity<User> getSingleUser(@PathVariable("userId") String userId) {
+
+    logger.info("Retry count: {}", retryCount);
+    retryCount++;
+
+    User user = userService.getUser(userId);
+    return ResponseEntity.ok(user);
+}
+```
+
+### 🧩 Fallback Method
+
+```java
+public ResponseEntity<User> ratingHotelFallBack(String userId, Exception ex) {
+    System.out.println("Fallback executed due to service failure: " + ex.getMessage());
+
+    User user = User.builder()
+            .userId("121")
+            .name("dummy")
+            .email("dummy@gmail.com")
+            .about("This user is created because some service is down !!!")
+            .build();
+
+    return new ResponseEntity<>(user, HttpStatus.OK);
+}
+```
+
+---
+
+## 💣 **Resilience4j Circuit Breaker Configuration**
+
+Enables Circuit Breaker pattern to prevent system overload due to repeated service failures.
+
+### ⚙️ `application.yml` Configuration
+
+```yaml
+# Resilience4j + Actuator Configuration
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+
+  endpoint:
+    health:
+      show-details: always
+
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      ratingHotelBreaker:
+        register-health-indicator: true
+        event-consumer-buffer-size: 10
+        failure-rate-threshold: 50
+        minimum-number-of-calls: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+        wait-duration-in-open-state: 5s
+        permitted-number-of-calls-in-half-open-state: 3
+        sliding-window-size: 10
+        sliding-window-type: COUNT_BASED
+
+  retry:
+    instances:
+      ratingHotelService:
+        max-attempts: 3
+        wait-duration: 3s
+```
+
+### ✅ Highlights
+
+- **Circuit Breaker**
+  - Trips after 5 calls with ≥50% failure rate.
+  - Waits 5 seconds before allowing trial calls in half-open state.
+  - Health is exposed via Spring Boot Actuator.
+
+- **Retry**
+  - Retries failed service calls 3 times with 3-second intervals.
+  - Fallback method is triggered on persistent failure.
+
+
+
 
 ### How to Run
 1. Start the **Config Service** on port **8087**.
