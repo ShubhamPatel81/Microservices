@@ -17,7 +17,7 @@ spring:
   application:
     name: user-Service
 
-#This is the config server importing from the configserver
+#This is the config server importing from the config-server
   config:
     import: "optional:configserver:http://localhost:8087"
 
@@ -39,3 +39,42 @@ spring:
 #
 #  instance:
 #    prefer-ip-address: true
+
+
+#resilience4j configuration
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+
+  endpoint:
+    health:
+      show-details: always
+
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      ratingHotelBreaker:
+        register-health-indicator: true
+        event-consumer-buffer-size: 10
+        failure-rate-threshold: 50
+        minimum-number-of-calls: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+        wait-duration-in-open-state: 5s
+        permitted-number-of-calls-in-half-open-state: 3
+        sliding-window-size: 10
+        sliding-window-type: COUNT_BASED
+
+  retry:
+    instances:
+      ratingHotelService:
+        max-attempts: 3
+        wait-duration: 3s
+
+

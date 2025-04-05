@@ -39,8 +39,8 @@ public class UserServiceImpl implements UserService {
     public User saveUser(User user) {
 
         //generate unique user id
-       String randonUserId= UUID.randomUUID().toString();
-        user.setUserId(randonUserId);
+       String randomUserId= UUID.randomUUID().toString();
+        user. setUserId(randomUserId);
         return userReopsitory.save(user);
     }
 
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
         // gt user by userId from user Repository
         User user = userReopsitory.findById(userId).orElseThrow(()->new ResourceAccessException("User not fount with the given ID "+userId));
 
-        // fetch eating of the above user from RATING SERVICE
+        // fetch rating of the above user from RATING SERVICE
         //http://localhost:8083/ratings/user/ce6690a2-276a-48e3-b06b-30ca9b512754
 
       Rating[] ratingOfUser=  restTemplate.getForObject("http://RATING-SERVICE/ratings/user/"+user.getUserId(), Rating[].class);
@@ -67,7 +67,6 @@ public class UserServiceImpl implements UserService {
            // call api to hotel service to get hotel and
 
             // return the rating
-
 
             //http://localhost:8082/hotels/b2e2166f-802e-4200-9129-cf7f041de7a
             //without using feign client
