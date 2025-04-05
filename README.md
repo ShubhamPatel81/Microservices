@@ -237,33 +237,9 @@ public class ConfigServerApplication {
 
 
 
-Perfect, Lester! Here’s the **Feign Client Integration** section rewritten to match the format and tone of the rest of your README content:
-
----
-
 ### 6. **Feign Client Integration**
 This project uses **Spring Cloud OpenFeign** to simplify inter-service communication in a microservices architecture. Feign allows services to communicate with each other declaratively using Java interfaces.
 
-#### Configuration
-
-```yaml
-spring:
-  application:
-    name: user-Service
-
-  config:
-    import: configServer: http://localhost:8087
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8085/eureka/
-    register-with-eureka: true
-    fetch-registry: true
-
-  instance:
-    prefer-ip-address: true
-```
 
 #### Dependency
 
@@ -312,49 +288,6 @@ public Hotel fetchHotel(String hotelId) {
 
 
 
-
-
-Absolutely, Lester! Below is the **full documentation** written in the same format you've used in your README for other microservices. This includes **Feign Client**, **Resilience4j Retry**, and **Circuit Breaker configuration**, structured clearly for a GitHub `README.md` file.
-
----
-
-## 🔗 **Feign Client Integration**
-
-This project uses **Spring Cloud OpenFeign** to simplify inter-service communication in a microservices architecture. It allows developers to write clean, declarative REST clients using only Java interfaces.
-
-### 📦 Dependencies
-
-```xml
-<dependency>
-    <groupId>org.springframework.cloud</groupId>
-    <artifactId>spring-cloud-starter-openfeign</artifactId>
-</dependency>
-```
-
-### ⚙️ Configuration
-
-```java
-@EnableFeignClients
-@SpringBootApplication
-public class UserServiceApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(UserServiceApplication.class, args);
-    }
-}
-```
-
-### 📞 Sample Feign Client Interface
-
-```java
-@FeignClient(name = "HOTEL-SERVICE")
-public interface HotelService {
-    
-    @GetMapping("/hotels/{hotelId}")
-    Hotel getHotel(@PathVariable("hotelId") String hotelId);
-}
-```
-
----
 
 ## 🔁 **Resilience4j Retry Integration**
 
