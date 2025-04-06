@@ -289,7 +289,7 @@ public Hotel fetchHotel(String hotelId) {
 
 
 
-## 🔁 **Resilience4j Retry Integration**
+### 7 **Resilience4j Retry and CircuitBreaker Integration**
 
 This implements **Resilience4j Retry** to handle transient faults by retrying failed external service calls. A fallback method is provided in case of persistent failure.
 
@@ -315,7 +315,7 @@ This implements **Resilience4j Retry** to handle transient faults by retrying fa
 </dependency>
 ```
 
-### ⚙️ Controller Example
+### Controller Example
 
 ```java
 int retryCount = 1;
@@ -333,7 +333,7 @@ public ResponseEntity<User> getSingleUser(@PathVariable("userId") String userId)
 }
 ```
 
-### 🧩 Fallback Method
+###  Fallback Method
 
 ```java
 public ResponseEntity<User> ratingHotelFallBack(String userId, Exception ex) {
@@ -352,7 +352,7 @@ public ResponseEntity<User> ratingHotelFallBack(String userId, Exception ex) {
 
 ---
 
-## 💣 **Resilience4j Circuit Breaker Configuration**
+### **Resilience4j Circuit Breaker Configuration**
 
 Enables Circuit Breaker pattern to prevent system overload due to repeated service failures.
 
@@ -395,7 +395,7 @@ resilience4j:
         wait-duration: 3s
 ```
 
-### ✅ Highlights
+### Highlights
 
 - **Circuit Breaker**
   - Trips after 5 calls with ≥50% failure rate.
@@ -406,7 +406,7 @@ resilience4j:
   - Retries failed service calls 3 times with 3-second intervals.
   - Fallback method is triggered on persistent failure.
 
-
+![alt text](image.png)
 
 
 ### How to Run
