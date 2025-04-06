@@ -410,7 +410,7 @@ resilience4j:
 
 
 ### Rate Limiting with Resilience4j
-Rate Limiter using Resilience4j's *@RateLimiter* annotation to ensure controlled access to the *getSingleUser* endpoint. This helps protect the service from overuse and potential *denial-of-service (DoS) attacks*.
+Rate Limiter using Resilience4j's *@RateLimiter* annotation to ensure controlled access to the *getSingleUser* endpoint. This helps protect the service from overuse and potential ##*denial-of-service (DoS) attacks*##.
 
 ###  `application.yml` Configuration
   ```yml
