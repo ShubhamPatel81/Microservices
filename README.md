@@ -289,11 +289,11 @@ public Hotel fetchHotel(String hotelId) {
 
 
 
-### 7 **Resilience4j Retry and CircuitBreaker Integration**
+### 7. **Resilience4j Retry, CircuitBreaker, RateLimiter Integration**
 
 This implements **Resilience4j Retry** to handle transient faults by retrying failed external service calls. A fallback method is provided in case of persistent failure.
 
-### 📦 Dependencies
+###  Dependencies
 
 ```xml
 <!-- Actuator -->
@@ -333,7 +333,7 @@ public ResponseEntity<User> getSingleUser(@PathVariable("userId") String userId)
 }
 ```
 
-###  Fallback Method
+###  Fallback Method(Used in all @RateLimiter, @Retry,@CircuitBreaker)
 
 ```java
 public ResponseEntity<User> ratingHotelFallBack(String userId, Exception ex) {
@@ -356,7 +356,7 @@ public ResponseEntity<User> ratingHotelFallBack(String userId, Exception ex) {
 
 Enables Circuit Breaker pattern to prevent system overload due to repeated service failures.
 
-### ⚙️ `application.yml` Configuration
+###  `application.yml` Configuration
 
 ```yaml
 # Resilience4j + Actuator Configuration
@@ -407,6 +407,60 @@ resilience4j:
   - Fallback method is triggered on persistent failure.
 
 ![alt text](image.png)
+
+
+### Rate Limiting with Resilience4j
+Rate Limiter using Resilience4j's *@RateLimiter* annotation to ensure controlled access to the *getSingleUser* endpoint. This helps protect the service from overuse and potential *denial-of-service (DoS) attacks*.
+
+###  `application.yml` Configuration
+  ```yml
+  ratelimiter:
+  instances:
+    userRateLimiter:
+      limit-refresh-period: 4s       # Time window to reset the limit
+      limit-for-period: 2            # Maximum number of calls in the above period
+      timeout-duration: 0s           # Wait time to acquire permission if limit is reached
+  ```
+ ### Implementation Example
+  ```java
+  @GetMapping("/{userId}")
+  @RateLimiter(name = "userRateLimiter", fallbackMethod = "ratingHotelFallBack")
+  public ResponseEntity<User> getSingleUser(@PathVariable("userId") String userId) {
+      logger.info("Retry count : {}", retyCount);
+      retyCount++;
+
+      User user = userService.getUser(userId);
+      return ResponseEntity.ok(user);
+  }
+
+      // Fallback Method
+      // Write here
+  ```
+###  Test @RateLimiter Using JMeter
+
+1. **Open JMeter**.
+
+2. **Create a Test Plan**:
+   - Right-click on **Test Plan** → `Add` → **Threads (Users)** → **Thread Group**.
+
+3. **Configure Thread Group**:
+   - Number of Threads (users): `5`
+   - Ramp-Up Period: `1`
+   - Loop Count: `5`
+
+4. **Add an HTTP Request**:
+   - Right-click on **Thread Group** → `Add` → **Sampler** → **HTTP Request**
+   - Set the following:
+     - **Method**: `GET`
+     - **Server Name**: `localhost`
+     - **Port Number**: `8080`
+     - **Path**: `/users/123` (replace with a valid user ID)
+
+5. **Add a Listener** to view results:
+   - Right-click on **Thread Group** → `Add` → **Listener** → **View Results Tree** or **Summary Report**
+
+6. **Run the Test**.
+---
 
 
 ### How to Run

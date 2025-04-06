@@ -4,6 +4,7 @@ import com.example.entities.User;
 import com.example.services.UserService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 //import lombok.Builder;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +37,8 @@ public class UserController {
     //get single user
     @GetMapping("/{userId}")
 //    @CircuitBreaker(name = "ratingHotelBreaker", fallbackMethod = "ratingHotelFallBack")
-    @Retry(name ="ratingHotelService", fallbackMethod ="ratingHotelFallBack" )
+//    @Retry(name ="ratingHotelService", fallbackMethod ="ratingHotelFallBack" )
+    @RateLimiter(name = "userRateLimiter",fallbackMethod ="ratingHotelFallBack" )
     public  ResponseEntity<User> getSingleUser(@PathVariable("userId") String userId){
 
         //checking retry method
@@ -50,9 +52,6 @@ public class UserController {
 
     //creating fall back method for circuitBreaker
     //fall back return type and the main method where fall back is user both return type should be same
-
-
-
     public ResponseEntity<User> ratingHotelFallBack(String userId, Exception ex){
         System.out.println("FallBack is executed becuase service is down !!!"+ ex.getMessage());
 
