@@ -5,7 +5,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/microservices
     username: postgres
-    password: SHUBHAM68
+    password: PASSWORD
     driver-class-name: org.postgresql.Driver  # Ensure PostgreSQL driver is specified
 
   jpa:
