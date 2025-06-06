@@ -16,7 +16,7 @@ spring:
 
 
 
-# This is register this service to the service Registry as a client
+# This is register service to the service Registry as a client
 eureka:
   client:
     service-url:
